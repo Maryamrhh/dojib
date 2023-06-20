@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  phoneNumber String   @unique
+  wallet      Float    @default(0.00)
+
+  email          String?
+  firstName      String?
+  lastName       String?
+  Factor         Factor[]
+  WalletCharging WalletCharging[]
+
+  @@map("users")
+}
+
+model WalletCharging {
+  id       String   @id @default(uuid())
+  date     DateTime @default(now())
+  order_id String   @unique @default(uuid())
+  amount   Float
+  p_link   String   @default("0")
+  p_id     String   @default("0")
+  status Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  Factor Factor[]
+}
+
+model Money_movement {
+  id       String   @id @default(uuid())
+  date     DateTime @default(now())
+  amount   Float
+  sender   String
+  receiver String
+  Factor   Factor[]
+}
+
+model Factor {
+  id     String   @id @default(uuid())
+  date   DateTime @default(now())
+  amount Float
+  s_c    String   @default("charge")
+  status Boolean  @default(true)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  moneyId        String?
+  money_movement Money_movement? @relation(fields: [moneyId], references: [id])
+
+  walletId       String?
+  walletcharging WalletCharging? @relation(fields: [walletId], references: [id])
+}
+
+model inbox {
+  id   String   @id @default(uuid())
+  date DateTime @default(now())
+
+  sender      String
+  receiver    String
+  amount      Float
+  description String
+  rr          String
+}

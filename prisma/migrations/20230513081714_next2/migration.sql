@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Money_movement" ALTER COLUMN "sender" SET DATA TYPE TEXT,
+ALTER COLUMN "receiver" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "inbox" ALTER COLUMN "sender" SET DATA TYPE TEXT,
+ALTER COLUMN "receiver" SET DATA TYPE TEXT;
